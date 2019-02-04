@@ -1,0 +1,3 @@
+[submodule "Railcraft-API"]
+	path = Railcraft-API
+	url = https://github.com/Railcraft/Railcraft-API

@@ -1,0 +1,3 @@
+rootProject.name = "Railcraft-Tweaker"
+
+include ":rc-api"

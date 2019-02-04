@@ -1,0 +1,70 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+allprojects {
+    apply plugin: 'net.minecraftforge.gradle.forge'
+
+    minecraft {
+        version = "1.12.2-14.23.5.2772"
+        runDir = "run"
+
+        mappings = "stable_39"
+    }
+}
+
+version = main_version
+group = "info.tritusk.modpack.toolkit"
+archivesBaseName = "railcraft-tweaker"
+
+repositories {
+    maven {
+        name = "jei"
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        name = "jared"
+        url = "http://maven.blamejared.com"
+    }
+}
+
+dependencies {
+    compileOnly project(":rc-api")
+
+    deobfCompile(group: 'CraftTweaker2', name: 'CraftTweaker2-MC1120-Main', version: "1.12-${craft_tweaker_version}") {
+        exclude group: 'org.ow2.asm'
+        exclude group: 'com.google.code.gson'
+    }
+
+    // Not referred in code; it is here so that we have it while we launch the game in dev env.
+    runtimeOnly group: 'mezz.jei', name: 'jei_1.12.2', version: jei_version
+}
+
+jar {
+    manifest {
+        attributes 'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}"
+        attributes 'Timestamp': System.currentTimeMillis()
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version
+    }
+        
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
