@@ -13,7 +13,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 @ModOnly("railcraft")
-@ZenClass("mos.railcraft.CokeOven")
+@ZenClass("mods.railcraft.CokeOven")
 @ZenRegister
 public final class CokeOvenSupport {
 
@@ -25,6 +25,8 @@ public final class CokeOvenSupport {
                 .name(name)
                 .output(CraftTweakerMC.getItemStack(output))
                 .time(time)
+                // TODO (3TUSK): The JEI compatibility of Coke Oven actually expects fluid output being preset.
+                //   should we guard against null here?
                 .fluid(CraftTweakerMC.getLiquidStack(outputFluid))
                 .register();
     }
