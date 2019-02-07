@@ -3,7 +3,6 @@ package info.tritusk.modpack.crafttweaker.support.railcraft;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
-import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import mods.railcraft.api.crafting.Crafters;
@@ -17,16 +16,14 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public final class RockCrusherSupport {
 
     @ZenMethod
-    public static void addRecipe(String name, Object[] outputs, IIngredient input) {
+    public static void addRecipe(String name, WeightedItemStack[] outputs, IIngredient input) {
         IRockCrusherCrafter.IRockCrusherRecipeBuilder recipe = Crafters.rockCrusher()
                 .makeRecipe(CraftTweakerMC.getIngredient(input))
                 .name(name);
         for (int i = 0; i < Math.min(outputs.length, 9); i++) {
-            if (outputs[i] instanceof WeightedItemStack) {
-                WeightedItemStack actual = (WeightedItemStack)outputs[i];
+            if (outputs[i] != null) {
+                WeightedItemStack actual = outputs[i];
                 recipe = recipe.addOutput(CraftTweakerMC.getItemStack(actual.getStack()), actual.getChance());
-            } else if (outputs[i] instanceof IItemStack) {
-                recipe = recipe.addOutput(CraftTweakerMC.getItemStack((IItemStack)outputs[i]));
             }
         }
         recipe.register();
