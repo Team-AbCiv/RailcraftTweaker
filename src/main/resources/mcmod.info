@@ -1,0 +1,13 @@
+[
+  {
+    "modid": "railcraft_tweaker",
+    "name": "Railcraft Tweaker",
+    "description": "Redefines your Railcraft?",
+    "version": "${version}",
+    "url" : "https://github.com/Team-AbCiv/RailcraftTweaker",
+    "authorList": [ "3TUSK" ],
+    "credits": "jared for the original IC2 support in ModTweaker; /u/wormzjl for his request of making this a thing.",
+    "useDependencyInformation": true,
+    "dependencies": [ "crafttweaker", "railcraft" ]
+  }
+]

@@ -22,8 +22,8 @@ public final class RockCrusherSupport {
                 .name(name);
         for (int i = 0; i < Math.min(outputs.length, 9); i++) {
             if (outputs[i] != null) {
-                WeightedItemStack actual = outputs[i];
-                recipe = recipe.addOutput(CraftTweakerMC.getItemStack(actual.getStack()), actual.getChance());
+                WeightedItemStack output = outputs[i];
+                recipe = recipe.addOutput(CraftTweakerMC.getItemStack(output.getStack()), output.getChance());
             }
         }
         recipe.register();
