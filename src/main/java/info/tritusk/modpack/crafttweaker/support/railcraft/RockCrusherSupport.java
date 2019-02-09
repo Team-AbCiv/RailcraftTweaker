@@ -28,4 +28,9 @@ public final class RockCrusherSupport {
         }
         recipe.register();
     }
+
+    @ZenMethod
+    public static void removeRecipe(String name) {
+        Crafters.rockCrusher().getRecipes().removeIf(r -> name.equals(r.getName().toString()));
+    }
 }

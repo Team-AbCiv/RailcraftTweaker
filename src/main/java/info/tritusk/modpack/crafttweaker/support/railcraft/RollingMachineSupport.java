@@ -16,6 +16,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.AbstractList;
 import java.util.Arrays;
+import java.util.Objects;
 
 @ModOnly("railcraft")
 @ZenClass("mods.railcraft.RollingMachine")
@@ -55,5 +56,10 @@ public final class RollingMachineSupport {
                                 .map(CraftTweakerMC::getIngredient)
                                 .collect(NonNullList::create, AbstractList::add, AbstractList::addAll)
                 ));
+    }
+
+    @ZenMethod
+    public static void remove(String name) {
+        Crafters.rollingMachine().getRecipes().removeIf(r -> Objects.toString(r.getRegistryName()).equals(name));
     }
 }
