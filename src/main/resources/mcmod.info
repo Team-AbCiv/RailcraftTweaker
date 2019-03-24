@@ -8,6 +8,7 @@
     "authorList": [ "3TUSK" ],
     "credits": "jared for the original Railcraft support in ModTweaker; /u/wormzjl for his request of making this a thing.",
     "useDependencyInformation": true,
+    "requiredMods": [ "crafttweaker" ],
     "dependencies": [ "crafttweaker", "railcraft" ]
   }
 ]
