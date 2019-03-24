@@ -1,5 +1,6 @@
 package info.tritusk.modpack.crafttweaker.support.railcraft;
 
+import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
@@ -60,6 +61,24 @@ public final class RollingMachineSupport {
 
     @ZenMethod
     public static void remove(String name) {
-        Crafters.rollingMachine().getRecipes().removeIf(r -> Objects.toString(r.getRegistryName()).equals(name));
+        }
+
+    private static final class PreciseRemoval implements IAction {
+
+        private final String recipeName;
+
+        PreciseRemoval(String name) {
+            this.recipeName = name;
+        }
+
+        @Override
+        public void apply() {
+            Crafters.rollingMachine().getRecipes().removeIf(r -> Objects.toString(r.getRegistryName()).equals(this.recipeName));
+        }
+
+        @Override
+        public String describe() {
+            return null;
+        }
     }
 }

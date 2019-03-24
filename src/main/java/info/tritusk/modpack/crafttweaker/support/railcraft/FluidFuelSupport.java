@@ -1,5 +1,6 @@
 package info.tritusk.modpack.crafttweaker.support.railcraft;
 
+import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.liquid.ILiquidDefinition;
@@ -9,6 +10,12 @@ import mods.railcraft.api.fuel.FluidFuelManager;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 @ModOnly("railcraft")
 @ZenClass("mods.railcraft.FluidFuel")
@@ -24,6 +31,7 @@ public final class FluidFuelSupport {
      *
      * @see FluidFuelManager#addFuel(FluidStack, int)
      */
+    @ZenMethod
     public static void addFuel(ILiquidStack liquid, int heatValuePerBucket) {
         FluidFuelManager.addFuel(CraftTweakerMC.getLiquidStack(liquid), heatValuePerBucket);
     }
@@ -37,10 +45,54 @@ public final class FluidFuelSupport {
      *
      * @see FluidFuelManager#addFuel(Fluid, int)
      */
+    @ZenMethod
     public static void addFuel(ILiquidDefinition liquidType, int heatValuePerBucket) {
         FluidFuelManager.addFuel(CraftTweakerMC.getFluid(liquidType), heatValuePerBucket);
     }
 
-    // TODO removeFuel(ILiquidStack), requires reflection, dunno what's the deal
-    // TODO removeFuel(ILiquidDefinition), requires reflection, dunno what's the deal
+    @ZenMethod
+    public static void removeFuel(ILiquidStack liquid) {
+        removeFuel(liquid.getDefinition());
+    }
+
+    @ZenMethod
+    public static void removeFuel(ILiquidDefinition liquidType) {
+        RailcraftTweaker.delayedActions.add(new FuelRemoval(liquidType));
+    }
+
+    private static final class FuelRemoval implements IAction {
+
+        static Map<FluidStack, Integer> fuelRegistryRef;
+
+        static {
+            try {
+                fuelRegistryRef = (Map<FluidStack, Integer>) FluidFuelManager.class.getDeclaredField("boilerFuel").get(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                fuelRegistryRef = Collections.emptyMap();
+            }
+
+        }
+
+        private final Fluid fluidType;
+
+        private FuelRemoval(ILiquidDefinition fluidType) {
+            this.fluidType = CraftTweakerMC.getFluid(fluidType);
+        }
+
+        @Override
+        public void apply() {
+            for (Iterator<Map.Entry<FluidStack, Integer>> itr = fuelRegistryRef.entrySet().iterator(); itr.hasNext();) {
+                Map.Entry<FluidStack, Integer> entry = itr.next();
+                if (entry.getKey().getFluid() == this.fluidType) {
+                    itr.remove();
+                    return;
+                }
+            }
+        }
+
+        @Override
+        public String describe() {
+            return String.format(Locale.ENGLISH, "Remove '%s' as valid Railcraft boiler fuel", this.fluidType.getName());
+        }
+    }
 }

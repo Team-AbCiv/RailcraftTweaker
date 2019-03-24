@@ -1,5 +1,6 @@
 package info.tritusk.modpack.crafttweaker.support.railcraft;
 
+import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
@@ -9,6 +10,8 @@ import mods.railcraft.api.crafting.Crafters;
 import mods.railcraft.api.crafting.IRockCrusherCrafter;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.Locale;
 
 @ModOnly("railcraft")
 @ZenClass("mods.railcraft.RockCrusher")
@@ -31,6 +34,25 @@ public final class RockCrusherSupport {
 
     @ZenMethod
     public static void removeRecipe(String name) {
-        Crafters.rockCrusher().getRecipes().removeIf(r -> name.equals(r.getName().toString()));
+        RailcraftTweaker.delayedActions.add(new PreciseRemoval(name));
+    }
+
+    private static final class PreciseRemoval implements IAction {
+
+        private final String recipeName;
+
+        PreciseRemoval(String recipeName) {
+            this.recipeName = recipeName;
+        }
+
+        @Override
+        public void apply() {
+            Crafters.rockCrusher().getRecipes().removeIf(r -> this.recipeName.equals(r.getName().toString()));
+        }
+
+        @Override
+        public String describe() {
+            return String.format(Locale.ENGLISH, "Remove Rock Crusher recipe '%s'", this.recipeName);
+        }
     }
 }
