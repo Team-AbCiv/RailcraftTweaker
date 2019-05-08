@@ -8,6 +8,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import mods.railcraft.api.crafting.Crafters;
 import mods.railcraft.api.crafting.IRollingMachineCrafter;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.NonNullList;
@@ -17,6 +18,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.AbstractList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 @ModOnly("railcraft")
@@ -61,7 +64,13 @@ public final class RollingMachineSupport {
 
     @ZenMethod
     public static void remove(String name) {
-        }
+        RailcraftTweaker.delayedActions.add(new PreciseRemoval(name));
+    }
+
+    @ZenMethod
+    public static void remove(IItemStack output) {
+        RailcraftTweaker.delayedActions.add(new FuzzyRemoval(CraftTweakerMC.getItemStack(output)));
+    }
 
     private static final class PreciseRemoval implements IAction {
 
@@ -74,6 +83,27 @@ public final class RollingMachineSupport {
         @Override
         public void apply() {
             Crafters.rollingMachine().getRecipes().removeIf(r -> Objects.toString(r.getRegistryName()).equals(this.recipeName));
+        }
+
+        @Override
+        public String describe() {
+            return null;
+        }
+    }
+
+    private static final class FuzzyRemoval implements IAction {
+
+        private final ItemStack output;
+
+        FuzzyRemoval(ItemStack output) {
+            this.output = output;
+        }
+
+        @Override
+        public void apply() {
+            Crafters.rollingMachine()
+                    .getRecipes()
+                    .removeIf(recipe -> recipe.getRecipeOutput().isItemEqual(this.output));
         }
 
         @Override

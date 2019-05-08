@@ -15,7 +15,7 @@ allprojects {
     apply plugin: 'net.minecraftforge.gradle.forge'
 
     minecraft {
-        version = "1.12.2-14.23.5.2811"
+        version = "1.12.2-14.23.5.2836"
         runDir = "run"
 
         mappings = "stable_39"
@@ -29,11 +29,11 @@ archivesBaseName = "railcraft-tweaker"
 repositories {
     maven {
         name = "jei"
-        url = "http://dvs1.progwml6.com/files/maven"
+        url = "https://dvs1.progwml6.com/files/maven"
     }
     maven {
         name = "jared"
-        url = "http://maven.blamejared.com"
+        url = "https://maven.blamejared.com"
     }
 }
 
@@ -46,7 +46,7 @@ dependencies {
     }
 
     // Not referred in code; it is here so that we have it while we launch the game in dev env.
-    runtimeOnly group: 'mezz.jei', name: 'jei_1.12.2', version: jei_version
+    implementation group: 'mezz.jei', name: 'jei_1.12.2', version: jei_version
 }
 
 jar {

@@ -4,10 +4,12 @@ import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.item.WeightedItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import mods.railcraft.api.crafting.Crafters;
 import mods.railcraft.api.crafting.IRockCrusherCrafter;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -37,6 +39,11 @@ public final class RockCrusherSupport {
         RailcraftTweaker.delayedActions.add(new PreciseRemoval(name));
     }
 
+    @ZenMethod
+    public static void removeRecipe(IItemStack input) {
+        RailcraftTweaker.delayedActions.add(new FuzzyRemoval(CraftTweakerMC.getItemStack(input)));
+    }
+
     private static final class PreciseRemoval implements IAction {
 
         private final String recipeName;
@@ -53,6 +60,27 @@ public final class RockCrusherSupport {
         @Override
         public String describe() {
             return String.format(Locale.ENGLISH, "Remove Rock Crusher recipe '%s'", this.recipeName);
+        }
+    }
+
+    private static final class FuzzyRemoval implements IAction {
+
+        private final ItemStack input;
+
+        FuzzyRemoval(ItemStack input) {
+            this.input = input;
+        }
+
+        @Override
+        public void apply() {
+            Crafters.rockCrusher()
+                    .getRecipes()
+                    .removeIf(recipe -> recipe.getInput().apply(this.input));
+        }
+
+        @Override
+        public String describe() {
+            return null;
         }
     }
 }
