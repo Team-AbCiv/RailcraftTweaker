@@ -28,23 +28,33 @@ public final class BlastFurnaceSupport {
     public static void addRecipe(String name, IItemStack output, IIngredient input,
             @Optional(valueLong = IBlastFurnaceCrafter.SMELT_TIME) int time,
             @Optional int slag) {
-        Crafters.blastFurnace()
+        RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
+            @Override
+            public void apply() {
+                Crafters.blastFurnace()
                 .newRecipe(CraftTweakerMC.getIngredient(input))
                 .name(name)
                 .time(time)
                 .output(CraftTweakerMC.getItemStack(output))
                 .slagOutput(slag)
                 .register();
+            }
+
+            @Override
+            public String describe() {
+                return null;
+            }
+        });
     }
 
     @ZenMethod
     public static void removeRecipe(String name) {
-        RailcraftTweaker.delayedActions.add(new PreciseRemoval(name));
+        RailcraftTweaker.DELAYED_REMOVALS.add(new PreciseRemoval(name));
     }
 
     @ZenMethod
     public static void removeRecipe(IItemStack output, @Optional IIngredient input) {
-        RailcraftTweaker.delayedActions.add(new FuzzyRemoval(output, input));
+        RailcraftTweaker.DELAYED_REMOVALS.add(new FuzzyRemoval(output, input));
     }
 
     private static final class PreciseRemoval implements IAction {
@@ -83,12 +93,8 @@ public final class BlastFurnaceSupport {
             for (Iterator<IBlastFurnaceCrafter.IRecipe> itr = recipes.iterator(); itr.hasNext();) {
                 IBlastFurnaceCrafter.IRecipe recipe = itr.next();
                 if (recipe.getOutput().isItemEqual(this.output)) {
-                    if (input == null || input == Ingredient.EMPTY) {
+                    if (input == null || input == Ingredient.EMPTY || recipe.getInput().equals(this.input)) {
                         itr.remove();
-                    } else {
-                        if (recipe.getInput().equals(this.input)) {
-                            itr.remove();
-                        }
                     }
                 }
             }

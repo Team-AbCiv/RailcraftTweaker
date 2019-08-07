@@ -18,8 +18,6 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.AbstractList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 
 @ModOnly("railcraft")
@@ -30,7 +28,10 @@ public final class RollingMachineSupport {
     @ZenMethod
     public static void addShaped(String name, IItemStack output, IIngredient[][] inputs,
             @Optional(valueLong = IRollingMachineCrafter.DEFAULT_PROCESS_TIME) int time) {
-        Crafters.rollingMachine()
+        RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
+            @Override
+            public void apply() {
+                Crafters.rollingMachine()
                 .newRecipe(CraftTweakerMC.getItemStack(output))
                 .name("crafttweaker", name)
                 .time(time)
@@ -44,12 +45,22 @@ public final class RollingMachineSupport {
                                 .collect(NonNullList::create, AbstractList::add, AbstractList::addAll),
                         CraftTweakerMC.getItemStack(output)
                 ));
+            }
+
+            @Override
+            public String describe() {
+                return null;
+            }
+        });
     }
 
     @ZenMethod
     public static void addShapeless(String name, IItemStack output, IIngredient[] inputs,
             @Optional(valueLong = IRollingMachineCrafter.DEFAULT_PROCESS_TIME) int time) {
-        Crafters.rollingMachine()
+        RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
+            @Override
+            public void apply() {
+                Crafters.rollingMachine()
                 .newRecipe(CraftTweakerMC.getItemStack(output))
                 .name("crafttweaker", name)
                 .time(time)
@@ -60,16 +71,23 @@ public final class RollingMachineSupport {
                                 .map(CraftTweakerMC::getIngredient)
                                 .collect(NonNullList::create, AbstractList::add, AbstractList::addAll)
                 ));
+            }
+
+            @Override
+            public String describe() {
+                return null;
+            }
+        });
     }
 
     @ZenMethod
     public static void remove(String name) {
-        RailcraftTweaker.delayedActions.add(new PreciseRemoval(name));
+        RailcraftTweaker.DELAYED_REMOVALS.add(new PreciseRemoval(name));
     }
 
     @ZenMethod
     public static void remove(IItemStack output) {
-        RailcraftTweaker.delayedActions.add(new FuzzyRemoval(CraftTweakerMC.getItemStack(output)));
+        RailcraftTweaker.DELAYED_REMOVALS.add(new FuzzyRemoval(CraftTweakerMC.getItemStack(output)));
     }
 
     private static final class PreciseRemoval implements IAction {

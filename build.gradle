@@ -15,7 +15,7 @@ allprojects {
     apply plugin: 'net.minecraftforge.gradle.forge'
 
     minecraft {
-        version = "1.12.2-14.23.5.2836"
+        version = "1.12.2-14.23.5.2838"
         runDir = "run"
 
         mappings = "stable_39"
