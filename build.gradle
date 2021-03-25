@@ -46,7 +46,7 @@ dependencies {
     }
 
     // Not referred in code; it is here so that we have it while we launch the game in dev env.
-    runtimeOnly group: 'mezz.jei', name: 'jei_1.12.2', version: jei_version
+    implementation group: 'mezz.jei', name: 'jei_1.12.2', version: jei_version
 }
 
 jar {
