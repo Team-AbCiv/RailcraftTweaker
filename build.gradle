@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
@@ -15,7 +15,7 @@ allprojects {
     apply plugin: 'net.minecraftforge.gradle.forge'
 
     minecraft {
-        version = "1.12.2-14.23.5.2836"
+        version = "1.12.2-14.23.5.2847"
         runDir = "run"
 
         mappings = "stable_39"

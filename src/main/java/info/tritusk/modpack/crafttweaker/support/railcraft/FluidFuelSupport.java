@@ -33,7 +33,17 @@ public final class FluidFuelSupport {
      */
     @ZenMethod
     public static void addFuel(ILiquidStack liquid, int heatValuePerBucket) {
-        FluidFuelManager.addFuel(CraftTweakerMC.getLiquidStack(liquid), heatValuePerBucket);
+        RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
+            @Override
+            public void apply() {
+                FluidFuelManager.addFuel(CraftTweakerMC.getLiquidStack(liquid), heatValuePerBucket);
+            }
+
+            @Override
+            public String describe() {
+                return null;
+            }
+        });
     }
 
     /**
@@ -47,7 +57,17 @@ public final class FluidFuelSupport {
      */
     @ZenMethod
     public static void addFuel(ILiquidDefinition liquidType, int heatValuePerBucket) {
-        FluidFuelManager.addFuel(CraftTweakerMC.getFluid(liquidType), heatValuePerBucket);
+        RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
+            @Override
+            public void apply() {
+                FluidFuelManager.addFuel(CraftTweakerMC.getFluid(liquidType), heatValuePerBucket);
+            }
+
+            @Override
+            public String describe() {
+                return null;
+            }
+        });
     }
 
     @ZenMethod
@@ -57,10 +77,11 @@ public final class FluidFuelSupport {
 
     @ZenMethod
     public static void removeFuel(ILiquidDefinition liquidType) {
-        RailcraftTweaker.delayedActions.add(new FuelRemoval(liquidType));
+        RailcraftTweaker.DELAYED_REMOVALS.add(new FuelRemoval(liquidType));
     }
 
-    private static final class FuelRemoval implements IAction {
+    @SuppressWarnings("unchecked")
+	private static final class FuelRemoval implements IAction {
 
         static Map<FluidStack, Integer> fuelRegistryRef;
 
@@ -70,7 +91,6 @@ public final class FluidFuelSupport {
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 fuelRegistryRef = Collections.emptyMap();
             }
-
         }
 
         private final Fluid fluidType;

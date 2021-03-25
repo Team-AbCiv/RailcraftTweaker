@@ -27,26 +27,36 @@ public final class CokeOvenSupport {
 
     @ZenMethod
     public static void addRecipe(String name, IItemStack output, IIngredient input,
-            @Optional(valueLong = ICokeOvenCrafter.DEFAULT_COOK_TIME) int time,
-            @Optional ILiquidStack outputFluid) {
-        Crafters.cokeOven().newRecipe(CraftTweakerMC.getIngredient(input))
-                .name(name)
-                .output(CraftTweakerMC.getItemStack(output))
-                .time(time)
-                // TODO (3TUSK): The JEI compatibility of Coke Oven actually expects fluid output being preset.
-                //   should we guard against null here?
-                .fluid(CraftTweakerMC.getLiquidStack(outputFluid))
-                .register();
+                                 @Optional(valueLong = ICokeOvenCrafter.DEFAULT_COOK_TIME) int time,
+                                 @Optional ILiquidStack outputFluid) {
+        RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
+            @Override
+            public void apply() {
+                Crafters.cokeOven().newRecipe(CraftTweakerMC.getIngredient(input))
+                        .name(name)
+                        .output(CraftTweakerMC.getItemStack(output))
+                        .time(time)
+                        // TODO (3TUSK): The JEI compatibility of Coke Oven actually expects fluid output being preset.
+                        //   should we guard against null here?
+                        .fluid(CraftTweakerMC.getLiquidStack(outputFluid))
+                        .register();
+            }
+
+            @Override
+            public String describe() {
+                return null;
+            }
+        });
     }
 
     @ZenMethod
     public static void removeRecipe(String name) {
-        RailcraftTweaker.delayedActions.add(new PreciseRemoval(name));
+        RailcraftTweaker.DELAYED_REMOVALS.add(new PreciseRemoval(name));
     }
 
     @ZenMethod
     public static void removeRecipe(IItemStack output, @Optional IIngredient input) {
-        RailcraftTweaker.delayedActions.add(new FuzzyRemoval(output, input));
+        RailcraftTweaker.DELAYED_REMOVALS.add(new FuzzyRemoval(output, input));
     }
 
     private static final class PreciseRemoval implements IAction {
@@ -82,15 +92,11 @@ public final class CokeOvenSupport {
         public void apply() {
             CraftTweakerAPI.logWarning("Using CokeOven.removeRecipe(IItemStack, @Optional IIngredient) is strongly discouraged. Use the String one whenever possible.");
             List<ICokeOvenCrafter.IRecipe> recipes = Crafters.cokeOven().getRecipes();
-            for (Iterator<ICokeOvenCrafter.IRecipe> itr = recipes.iterator(); itr.hasNext();) {
+            for (Iterator<ICokeOvenCrafter.IRecipe> itr = recipes.iterator(); itr.hasNext(); ) {
                 ICokeOvenCrafter.IRecipe recipe = itr.next();
                 if (recipe.getOutput().isItemEqual(this.output)) {
-                    if (input == null || input == Ingredient.EMPTY) {
+                    if (input == null || input == Ingredient.EMPTY || recipe.getInput().equals(this.input)) {
                         itr.remove();
-                    } else {
-                        if (recipe.getInput().equals(this.input)) {
-                            itr.remove();
-                        }
                     }
                 }
             }

@@ -6,17 +6,22 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 import java.util.ArrayList;
 
-@Mod(modid = "railcraft_tweaker", name = "RailcraftTweaker", version = "0.0.0", useMetadata = true)
+@Mod(modid = "railcraft_tweaker", name = "RailcraftTweaker", version = "0.1.0", useMetadata = true)
 public final class RailcraftTweaker {
 
-    static ArrayList<IAction> delayedActions = new ArrayList<>(16);
+    static final ArrayList<IAction> DELAYED_REMOVALS = new ArrayList<>(), DELAYED_ACTIONS = new ArrayList<>();
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        for (IAction action : delayedActions) {
+        for (IAction action : DELAYED_REMOVALS) {
             action.apply();
         }
-        delayedActions.clear();
-        delayedActions.trimToSize();
+        for (IAction action : DELAYED_ACTIONS) {
+            action.apply();
+        }
+        DELAYED_REMOVALS.clear();
+        DELAYED_REMOVALS.trimToSize();
+        DELAYED_ACTIONS.clear();
+        DELAYED_ACTIONS.trimToSize();
     }
 }
