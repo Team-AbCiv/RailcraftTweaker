@@ -5,4 +5,4 @@ Specifically, this mod enables the addition and/or removal of recipes of various
 
 ### Documentation
 
-WIP
+See [this file](./demo.zs) for a quick reference.
