@@ -35,7 +35,7 @@ public final class RockCrusherSupport {
                     }
                 }
                 recipe.register();
-                }
+            }
 
             @Override
             public String describe() {

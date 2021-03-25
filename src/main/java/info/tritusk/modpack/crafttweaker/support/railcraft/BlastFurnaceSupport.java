@@ -26,18 +26,18 @@ public final class BlastFurnaceSupport {
 
     @ZenMethod
     public static void addRecipe(String name, IItemStack output, IIngredient input,
-            @Optional(valueLong = IBlastFurnaceCrafter.SMELT_TIME) int time,
-            @Optional int slag) {
+                                 @Optional(valueLong = IBlastFurnaceCrafter.SMELT_TIME) int time,
+                                 @Optional int slag) {
         RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
             @Override
             public void apply() {
                 Crafters.blastFurnace()
-                .newRecipe(CraftTweakerMC.getIngredient(input))
-                .name(name)
-                .time(time)
-                .output(CraftTweakerMC.getItemStack(output))
-                .slagOutput(slag)
-                .register();
+                        .newRecipe(CraftTweakerMC.getIngredient(input))
+                        .name(name)
+                        .time(time)
+                        .output(CraftTweakerMC.getItemStack(output))
+                        .slagOutput(slag)
+                        .register();
             }
 
             @Override
@@ -90,7 +90,7 @@ public final class BlastFurnaceSupport {
         public void apply() {
             CraftTweakerAPI.logWarning("Using CokeOven.removeRecipe(IItemStack, @Optional IIngredient) is strongly discouraged. Use the String one whenever possible.");
             List<IBlastFurnaceCrafter.IRecipe> recipes = Crafters.blastFurnace().getRecipes();
-            for (Iterator<IBlastFurnaceCrafter.IRecipe> itr = recipes.iterator(); itr.hasNext();) {
+            for (Iterator<IBlastFurnaceCrafter.IRecipe> itr = recipes.iterator(); itr.hasNext(); ) {
                 IBlastFurnaceCrafter.IRecipe recipe = itr.next();
                 if (recipe.getOutput().isItemEqual(this.output)) {
                     if (input == null || input == Ingredient.EMPTY || recipe.getInput().equals(this.input)) {

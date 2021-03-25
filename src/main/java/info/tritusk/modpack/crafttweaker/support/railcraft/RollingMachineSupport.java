@@ -27,24 +27,24 @@ public final class RollingMachineSupport {
 
     @ZenMethod
     public static void addShaped(String name, IItemStack output, IIngredient[][] inputs,
-            @Optional(valueLong = IRollingMachineCrafter.DEFAULT_PROCESS_TIME) int time) {
+                                 @Optional(valueLong = IRollingMachineCrafter.DEFAULT_PROCESS_TIME) int time) {
         RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
             @Override
             public void apply() {
                 Crafters.rollingMachine()
-                .newRecipe(CraftTweakerMC.getItemStack(output))
-                .name("crafttweaker", name)
-                .time(time)
-                .recipe(new ShapedRecipes(
-                        "railcraft-tweaker",
-                        3,
-                        3,
-                        Arrays.stream(inputs)
-                                .flatMap(Arrays::stream)
-                                .map(CraftTweakerMC::getIngredient)
-                                .collect(NonNullList::create, AbstractList::add, AbstractList::addAll),
-                        CraftTweakerMC.getItemStack(output)
-                ));
+                        .newRecipe(CraftTweakerMC.getItemStack(output))
+                        .name("crafttweaker", name)
+                        .time(time)
+                        .recipe(new ShapedRecipes(
+                                "railcraft-tweaker",
+                                3,
+                                3,
+                                Arrays.stream(inputs)
+                                        .flatMap(Arrays::stream)
+                                        .map(CraftTweakerMC::getIngredient)
+                                        .collect(NonNullList::create, AbstractList::add, AbstractList::addAll),
+                                CraftTweakerMC.getItemStack(output)
+                        ));
             }
 
             @Override
@@ -56,21 +56,21 @@ public final class RollingMachineSupport {
 
     @ZenMethod
     public static void addShapeless(String name, IItemStack output, IIngredient[] inputs,
-            @Optional(valueLong = IRollingMachineCrafter.DEFAULT_PROCESS_TIME) int time) {
+                                    @Optional(valueLong = IRollingMachineCrafter.DEFAULT_PROCESS_TIME) int time) {
         RailcraftTweaker.DELAYED_ACTIONS.add(new IAction() {
             @Override
             public void apply() {
                 Crafters.rollingMachine()
-                .newRecipe(CraftTweakerMC.getItemStack(output))
-                .name("crafttweaker", name)
-                .time(time)
-                .recipe(new ShapelessRecipes(
-                        "railcraft-tweaker",
-                        CraftTweakerMC.getItemStack(output),
-                        Arrays.stream(inputs)
-                                .map(CraftTweakerMC::getIngredient)
-                                .collect(NonNullList::create, AbstractList::add, AbstractList::addAll)
-                ));
+                        .newRecipe(CraftTweakerMC.getItemStack(output))
+                        .name("crafttweaker", name)
+                        .time(time)
+                        .recipe(new ShapelessRecipes(
+                                "railcraft-tweaker",
+                                CraftTweakerMC.getItemStack(output),
+                                Arrays.stream(inputs)
+                                        .map(CraftTweakerMC::getIngredient)
+                                        .collect(NonNullList::create, AbstractList::add, AbstractList::addAll)
+                        ));
             }
 
             @Override

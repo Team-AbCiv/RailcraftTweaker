@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
@@ -15,7 +15,7 @@ allprojects {
     apply plugin: 'net.minecraftforge.gradle.forge'
 
     minecraft {
-        version = "1.12.2-14.23.5.2838"
+        version = "1.12.2-14.23.5.2847"
         runDir = "run"
 
         mappings = "stable_39"
@@ -46,7 +46,7 @@ dependencies {
     }
 
     // Not referred in code; it is here so that we have it while we launch the game in dev env.
-    implementation group: 'mezz.jei', name: 'jei_1.12.2', version: jei_version
+    runtimeOnly group: 'mezz.jei', name: 'jei_1.12.2', version: jei_version
 }
 
 jar {
